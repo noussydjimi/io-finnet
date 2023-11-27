@@ -1,0 +1,12 @@
+---
+plugin: amazon.aws.aws_ec2
+regions:
+  - eu-west-3
+aws_profile: io-finnet
+# filters:
+#   tag:env: dev
+groups:
+  dev: " 'dev' in tags.env"
+  staging: " 'staging' in tags.env"
+  prod: " 'prod' in tags.env"
+
