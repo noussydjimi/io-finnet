@@ -1,0 +1,32 @@
+---
+- name: Install Python Pip
+  apt:
+    name: python3-pip
+    state: latest
+    update_cache: true
+  tags: [always]
+- name: Install Python dependencies
+  pip:
+    name:
+      - boto3
+      - requests
+      - urllib3
+      - docker
+      - PyYAML
+    state: latest
+  tags: [always]
+# - name: Uninstall Python dependencies
+#   pip:
+#     name:
+#       - docker-py
+#     state: absent
+#   tags: [always]
+- name: Gathering facts
+  setup:
+  tags: [always]
+
+- name: check prerequisite
+  ansible.builtin.assert:
+    that:
+      - ansible_processor_cores >= 0.3
+      - ansible_memtotal_mb >= 948
