@@ -1,0 +1,6 @@
+version: '3'
+services:
+  nginx:
+    image: {{ app_image }}
+    ports:
+      - {{ app_port }}:{{ app_target_port }}

@@ -1,0 +1,22 @@
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: roles/docker-compose/templates/docker-compose.yml.j2
+    dest: /tmp
+
+
+- name: test docker compose
+  ansible.builtin.shell: |
+    cd  /tmp
+    docker-compose up -d
+
+
+# - name: create docker-compose.yml
+#   community.docker.docker_compose:
+#       project_name: mynginx
+#       definition:
+#         version: "3.7"
+#         services:
+#           app:
+#             image: nginx
+#             ports:
+#             - 8081:8081

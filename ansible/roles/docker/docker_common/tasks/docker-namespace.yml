@@ -1,0 +1,48 @@
+---
+- name: create group
+  group:
+    name: "{{ docker_namespace_group }}"
+    system: true
+    state: present
+
+- name: create user
+  user:
+    name: "{{ docker_namespace_user }}"
+    group: "{{ docker_namespace_group }}"
+    system: true
+    shell: /bin/false
+    home: "/var/lib/{{ docker_namespace_user }}"
+    create_home: false
+    state: present
+
+- name: capture uid from docker_namespace_user
+  shell: cat /etc/passwd | grep dockremap | awk -F ":" '{print $3}'
+  register: docker_uid
+
+- name: capture dockremap exist
+  shell: cat /etc/subuid | grep dockremap | wc -l
+  register: dockremap_subuid
+
+- name: capture uid from docker_namespace_user
+  shell: cat /etc/group | grep oscaro | awk -F ":" '{print $3}'
+  register: oscaro_gid
+
+- name: capture uid from docker_namespace_user
+  shell: cat /etc/subgid | grep dockremap | wc -l
+  register: dockremap_subgid
+
+- name: subuid definition
+  lineinfile:
+    dest: /etc/subuid
+    regexp: "^{{ docker_namespace_user }}"
+    line: "{{ docker_namespace_user }}:{{ docker_uid.stdout }}:1\n{{ docker_namespace_user }}:{{ docker_id_remap }}:65536"
+  when: dockremap_subuid.stdout == "0"
+
+- name: subgid definition
+  lineinfile:
+    dest: /etc/subgid
+    insertbefore: "{{ docker_namespace_group }}:{{ oscaro_gid.stdout }}:1"
+    regexp: "^{{ docker_namespace_group }}"
+    line: "{{ docker_namespace_group }}:{{ oscaro_gid.stdout }}:1\n{{ docker_namespace_group }}:{{ docker_id_remap }}:65536"
+  notify: reload systemd and restart docker
+  when: dockremap_subgid.stdout == "0"
