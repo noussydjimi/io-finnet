@@ -1,0 +1,24 @@
+---
+
+- hosts: all
+  serial:
+    - 1
+    - 100%
+  become: true
+  gather_facts: false
+  pre_tasks:
+    - import_tasks: pre_tasks.yml
+  # post_tasks:
+  #   - import_tasks: post_tasks.yml
+
+- name: "DOCKER | install securised docker"
+  hosts: all
+  become: yes
+  roles:
+    - docker/docker_common
+    - docker-compose
+  tags:
+    - docker
+
+
+
