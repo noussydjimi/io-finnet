@@ -1,0 +1,4 @@
+bucket  = "prod-io-finnet-interview"
+region  = "eu-west-3"
+key     = "prod/eu-west-3/terraform.tfstate"
+profile = "io-finnet"

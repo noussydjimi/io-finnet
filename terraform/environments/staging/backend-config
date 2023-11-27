@@ -1,0 +1,4 @@
+bucket   = "staging-io-finnet-interview"
+region   = "eu-west-3"
+key      = "staging/eu-west-3/terraform.tfstate"
+profile  = "io-finnet"
